@@ -1,0 +1,20 @@
+{
+  "name": "task-lob-api",
+  "version": "0.1.0",
+  "description": "AI Proxy for Task Lob - The Lob Catcher",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "hono": "^4.0.0",
+    "@hono/node-server": "^1.8.0",
+    "groq-sdk": "^0.5.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,421 @@
+[
+  {
+    "name": "workspaces",
+    "type": "base",
+    "schema": [
+      {
+        "name": "name",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "owner",
+        "type": "relation",
+        "required": true,
+        "options": {
+          "collectionId": "_pb_users_auth_",
+          "cascadeDelete": false,
+          "maxSelect": 1
+        }
+      },
+      {
+        "name": "website_url",
+        "type": "url",
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "lob_sessions",
+    "type": "base",
+    "schema": [
+      {
+        "name": "raw_input",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "sender",
+        "type": "relation",
+        "required": true,
+        "options": {
+          "collectionId": "_pb_users_auth_",
+          "cascadeDelete": false,
+          "maxSelect": 1
+        }
+      },
+      {
+        "name": "workspace",
+        "type": "relation",
+        "required": true,
+        "options": {
+          "collectionId": "workspaces",
+          "cascadeDelete": true,
+          "maxSelect": 1
+        }
+      }
+    ]
+  },
+  {
+    "name": "tasks",
+    "type": "base",
+    "schema": [
+      {
+        "name": "raw_input",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "lob_session",
+        "type": "relation",
+        "required": false,
+        "options": {
+          "collectionId": "lob_sessions",
+          "cascadeDelete": false,
+          "maxSelect": 1
+        }
+      },
+      {
+        "name": "position_in_lob",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "classification",
+        "type": "select",
+        "required": true,
+        "options": {
+          "values": ["task", "self_service", "reminder", "venting"]
+        }
+      },
+      {
+        "name": "urgency",
+        "type": "select",
+        "required": true,
+        "options": {
+          "values": ["normal", "urgent", "deadline"]
+        }
+      },
+      {
+        "name": "deadline",
+        "type": "date",
+        "required": false
+      },
+      {
+        "name": "system_name",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "summary",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "current_state",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "desired_outcome",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "missing_info",
+        "type": "json",
+        "required": false
+      },
+      {
+        "name": "sender",
+        "type": "relation",
+        "required": true,
+        "options": {
+          "collectionId": "_pb_users_auth_",
+          "cascadeDelete": false,
+          "maxSelect": 1
+        }
+      },
+      {
+        "name": "owner",
+        "type": "relation",
+        "required": false,
+        "options": {
+          "collectionId": "_pb_users_auth_",
+          "cascadeDelete": false,
+          "maxSelect": 1
+        }
+      },
+      {
+        "name": "court_user",
+        "type": "relation",
+        "required": false,
+        "options": {
+          "collectionId": "_pb_users_auth_",
+          "cascadeDelete": false,
+          "maxSelect": 1
+        }
+      },
+      {
+        "name": "court_reason",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "status",
+        "type": "select",
+        "required": true,
+        "options": {
+          "values": ["draft", "sent", "active", "blocked", "done"]
+        }
+      },
+      {
+        "name": "ai_research",
+        "type": "json",
+        "required": false
+      },
+      {
+        "name": "ai_suggested_plan",
+        "type": "json",
+        "required": false
+      },
+      {
+        "name": "context_injected",
+        "type": "json",
+        "required": false
+      },
+      {
+        "name": "resolution_notes",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "workspace",
+        "type": "relation",
+        "required": true,
+        "options": {
+          "collectionId": "workspaces",
+          "cascadeDelete": true,
+          "maxSelect": 1
+        }
+      }
+    ]
+  },
+  {
+    "name": "threads",
+    "type": "base",
+    "schema": [
+      {
+        "name": "task",
+        "type": "relation",
+        "required": true,
+        "options": {
+          "collectionId": "tasks",
+          "cascadeDelete": true,
+          "maxSelect": 1
+        }
+      },
+      {
+        "name": "type",
+        "type": "select",
+        "required": true,
+        "options": {
+          "values": ["message", "status_change", "court_flip", "system", "research"]
+        }
+      },
+      {
+        "name": "actor",
+        "type": "relation",
+        "required": false,
+        "options": {
+          "collectionId": "_pb_users_auth_",
+          "cascadeDelete": false,
+          "maxSelect": 1
+        }
+      },
+      {
+        "name": "actor_type",
+        "type": "select",
+        "required": true,
+        "options": {
+          "values": ["user", "ai", "system"]
+        }
+      },
+      {
+        "name": "content",
+        "type": "text",
+        "required": true
+      }
+    ]
+  },
+  {
+    "name": "company_brain",
+    "type": "base",
+    "schema": [
+      {
+        "name": "workspace",
+        "type": "relation",
+        "required": true,
+        "options": {
+          "collectionId": "workspaces",
+          "cascadeDelete": true,
+          "maxSelect": 1
+        }
+      },
+      {
+        "name": "memory_type",
+        "type": "select",
+        "required": true,
+        "options": {
+          "values": ["system", "person", "product", "vocabulary", "routing", "resolution", "website", "timeline"]
+        }
+      },
+      {
+        "name": "key",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "value",
+        "type": "json",
+        "required": true
+      },
+      {
+        "name": "confidence",
+        "type": "number",
+        "required": true,
+        "options": {
+          "min": 0,
+          "max": 1
+        }
+      },
+      {
+        "name": "learned_from",
+        "type": "relation",
+        "required": false,
+        "options": {
+          "collectionId": "tasks",
+          "cascadeDelete": false,
+          "maxSelect": null
+        }
+      },
+      {
+        "name": "times_confirmed",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "times_used",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "last_used",
+        "type": "date",
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "resolutions",
+    "type": "base",
+    "schema": [
+      {
+        "name": "workspace",
+        "type": "relation",
+        "required": true,
+        "options": {
+          "collectionId": "workspaces",
+          "cascadeDelete": true,
+          "maxSelect": 1
+        }
+      },
+      {
+        "name": "problem_pattern",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "solution",
+        "type": "text",
+        "required": true
+      },
+      {
+        "name": "system_name",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "resolved_by",
+        "type": "relation",
+        "required": false,
+        "options": {
+          "collectionId": "_pb_users_auth_",
+          "cascadeDelete": false,
+          "maxSelect": 1
+        }
+      },
+      {
+        "name": "task",
+        "type": "relation",
+        "required": false,
+        "options": {
+          "collectionId": "tasks",
+          "cascadeDelete": false,
+          "maxSelect": 1
+        }
+      },
+      {
+        "name": "times_suggested",
+        "type": "number",
+        "required": false
+      },
+      {
+        "name": "times_worked",
+        "type": "number",
+        "required": false
+      }
+    ]
+  },
+  {
+    "name": "website_cache",
+    "type": "base",
+    "schema": [
+      {
+        "name": "workspace",
+        "type": "relation",
+        "required": true,
+        "options": {
+          "collectionId": "workspaces",
+          "cascadeDelete": true,
+          "maxSelect": 1
+        }
+      },
+      {
+        "name": "url",
+        "type": "url",
+        "required": true
+      },
+      {
+        "name": "page_title",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "content_summary",
+        "type": "text",
+        "required": false
+      },
+      {
+        "name": "keywords",
+        "type": "json",
+        "required": false
+      },
+      {
+        "name": "last_crawled",
+        "type": "date",
+        "required": false
+      }
+    ]
+  }
+]

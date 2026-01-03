@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build outputs
+dist/
+build/
+.dart_tool/
+.packages
+
+# Flutter
+app/.dart_tool/
+app/.packages
+app/build/
+app/.flutter-plugins
+app/.flutter-plugins-dependencies
+app/pubspec.lock
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+.DS_Store
+
+# PocketBase
+pocketbase/pb_data/
+pocketbase/pocketbase.exe
+pocketbase/pocketbase
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test
+coverage/
+
+# OS
+Thumbs.db
+.DS_Store
