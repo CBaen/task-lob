@@ -1,0 +1,242 @@
+{
+  "_documentation": "Module tracking for Reluminant developers. Update status as you work.",
+  "_statuses": {
+    "complete": "Working, tested, don't touch unless broken",
+    "building": "In progress, may have gaps",
+    "scaffolded": "Structure exists, needs implementation",
+    "planned": "Designed but not started",
+    "blocked": "Waiting on external dependency"
+  },
+  "_lastUpdated": "2025-01-02",
+  "_lastUpdatedBy": "Initial builder instance",
+
+  "modules": {
+    "api": {
+      "health": {
+        "status": "complete",
+        "path": "api/src/routes/health.js",
+        "description": "Simple health check endpoint",
+        "endpoints": ["GET /api/health"],
+        "tests": [],
+        "notes": ""
+      },
+      "lob-parser": {
+        "status": "building",
+        "path": "api/src/routes/lob-catcher.js",
+        "description": "Core lob parsing - voice/text to discrete tasks",
+        "endpoints": [
+          "POST /api/lob/parse",
+          "GET /api/lob/test"
+        ],
+        "tests": [],
+        "notes": "Main parsing works. Needs: streaming, company context integration"
+      },
+      "prompts": {
+        "status": "building",
+        "path": "api/src/lib/prompts.js",
+        "description": "AI prompts for parsing, classification, research",
+        "prompts": [
+          "LOB_PARSER_PROMPT - Main parsing",
+          "CLASSIFICATION_PROMPT - Re-classification",
+          "RESEARCH_PROMPT - Junior researcher"
+        ],
+        "notes": "Main prompt solid. Others need testing with real data."
+      },
+      "tasks": {
+        "status": "planned",
+        "path": "api/src/routes/tasks.js",
+        "description": "CRUD operations for tasks",
+        "endpoints": [
+          "POST /api/tasks",
+          "GET /api/tasks",
+          "GET /api/tasks/:id",
+          "PATCH /api/tasks/:id",
+          "DELETE /api/tasks/:id"
+        ],
+        "notes": "Needs PocketBase integration"
+      },
+      "routing": {
+        "status": "planned",
+        "path": "api/src/routes/routing.js",
+        "description": "Smart routing suggestions using Company Brain",
+        "endpoints": [
+          "POST /api/routing/suggest",
+          "POST /api/routing/confirm",
+          "GET /api/routing/workload"
+        ],
+        "notes": ""
+      },
+      "brain": {
+        "status": "planned",
+        "path": "api/src/routes/brain.js",
+        "description": "Company Brain - learning and memory",
+        "endpoints": [
+          "GET /api/brain",
+          "POST /api/brain",
+          "PATCH /api/brain/:id",
+          "DELETE /api/brain/:id",
+          "POST /api/brain/learn",
+          "POST /api/brain/crawl-website"
+        ],
+        "notes": ""
+      },
+      "research": {
+        "status": "planned",
+        "path": "api/src/routes/research.js",
+        "description": "Junior Researcher - web search, plan drafting",
+        "endpoints": [
+          "POST /api/research/investigate",
+          "POST /api/research/suggest-plan"
+        ],
+        "notes": ""
+      }
+    },
+
+    "pocketbase": {
+      "schema": {
+        "status": "complete",
+        "path": "pocketbase/schema.json",
+        "description": "Database schema for all collections",
+        "collections": [
+          "workspaces",
+          "tasks",
+          "threads",
+          "lob_sessions",
+          "company_brain",
+          "resolutions",
+          "website_cache"
+        ],
+        "notes": "Ready to import via Admin UI"
+      },
+      "hooks": {
+        "status": "planned",
+        "path": "pocketbase/pb_hooks/",
+        "description": "Server-side automation hooks",
+        "hooks": [
+          "onTaskComplete - capture resolution",
+          "onCourtFlip - notify user",
+          "onMemoryUpdate - adjust confidence"
+        ],
+        "notes": ""
+      }
+    },
+
+    "flutter": {
+      "models": {
+        "status": "complete",
+        "path": "app/lib/models/",
+        "description": "Data models for Task, ParsedLob",
+        "files": ["task.dart", "parsed_lob.dart"],
+        "notes": ""
+      },
+      "services": {
+        "status": "scaffolded",
+        "path": "app/lib/services/",
+        "description": "API and Voice services",
+        "files": ["api_service.dart", "voice_service.dart"],
+        "notes": "Structure done, needs testing on device"
+      },
+      "screens": {
+        "status": "planned",
+        "path": "app/lib/screens/",
+        "description": "UI screens",
+        "screens": [
+          "home_screen - PTT button",
+          "lob_catcher - Review parsed tasks",
+          "my_court - Tasks waiting for me",
+          "waiting - Tasks waiting on others",
+          "brain - View/edit Company Brain"
+        ],
+        "notes": "Blocked until Flutter installed"
+      },
+      "widgets": {
+        "status": "planned",
+        "path": "app/lib/widgets/",
+        "description": "Reusable UI components",
+        "widgets": [
+          "ptt_button - Push-to-talk",
+          "task_card - Task display",
+          "lob_card - Card in lob catcher",
+          "court_badge - Whose turn indicator"
+        ],
+        "notes": ""
+      }
+    },
+
+    "test": {
+      "fixtures": {
+        "status": "planned",
+        "path": "test/fixtures/",
+        "description": "Test data - lobs and expected outputs",
+        "files": [
+          "jeff_lobs.json",
+          "self_service_cases.json",
+          "venting_cases.json",
+          "edge_cases.json"
+        ],
+        "notes": ""
+      },
+      "web-ui": {
+        "status": "planned",
+        "path": "test/web/",
+        "description": "Browser-based test UI for lob parsing",
+        "files": ["index.html"],
+        "notes": "Simple HTML/JS, no build step"
+      }
+    },
+
+    "docs": {
+      "setup": {
+        "status": "complete",
+        "path": "docs/SETUP.md",
+        "description": "Setup instructions for new machine",
+        "notes": ""
+      },
+      "reluminant": {
+        "status": "complete",
+        "path": "RELUMINANT.md",
+        "description": "Developer handoff for AI instances",
+        "notes": ""
+      }
+    }
+  },
+
+  "buildQueue": [
+    {
+      "priority": 1,
+      "module": "api/tasks",
+      "reason": "Flutter needs CRUD endpoints",
+      "blockedBy": null
+    },
+    {
+      "priority": 2,
+      "module": "test/fixtures",
+      "reason": "Need test data to validate prompts",
+      "blockedBy": null
+    },
+    {
+      "priority": 3,
+      "module": "test/web-ui",
+      "reason": "Visual verification of parsing",
+      "blockedBy": null
+    },
+    {
+      "priority": 4,
+      "module": "api/routing",
+      "reason": "Smart routing for tasks",
+      "blockedBy": null
+    },
+    {
+      "priority": 5,
+      "module": "api/brain",
+      "reason": "Company learning system",
+      "blockedBy": null
+    },
+    {
+      "priority": 6,
+      "module": "flutter/screens",
+      "reason": "Mobile UI",
+      "blockedBy": "Flutter installation"
+    }
+  ]
+}

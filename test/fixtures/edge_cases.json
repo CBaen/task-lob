@@ -1,0 +1,115 @@
+{
+  "_documentation": "Edge cases for testing the lob parser. These test specific parsing challenges.",
+
+  "cases": [
+    {
+      "id": "edge_1",
+      "name": "Single Task (Not a Lob)",
+      "input": "The homepage banner is showing the wrong image.",
+      "expectedTasks": 1,
+      "notes": "Should still work with single tasks. Don't over-parse."
+    },
+    {
+      "id": "edge_2",
+      "name": "Empty Input",
+      "input": "",
+      "expectedTasks": 0,
+      "notes": "Handle gracefully."
+    },
+    {
+      "id": "edge_3",
+      "name": "Just Noise",
+      "input": "ok cool thanks",
+      "expectedTasks": 0,
+      "notes": "Not a task, not venting. Just acknowledgment."
+    },
+    {
+      "id": "edge_4",
+      "name": "Question Disguised as Task",
+      "input": "Do we have access to the Mailchimp account? And is there a way to see the shipping rates? What's the password for the admin panel?",
+      "expectedTasks": 3,
+      "expectedClassifications": {
+        "self_service": 2,
+        "task": 1
+      },
+      "notes": "Questions that are really requests."
+    },
+    {
+      "id": "edge_5",
+      "name": "Implicit Deadline",
+      "input": "We need to get this done before the trade show next month.",
+      "expectedTasks": 1,
+      "notes": "Deadline is implicit (next month), not specific."
+    },
+    {
+      "id": "edge_6",
+      "name": "Embedded URL",
+      "input": "Can you check why https://example.com/product-page isn't loading and also update the links on https://example.com/about to point to the new blog.",
+      "expectedTasks": 2,
+      "notes": "URLs should be preserved and noted."
+    },
+    {
+      "id": "edge_7",
+      "name": "Mixed Languages / Jargon",
+      "input": "The SEO on the PDP is tanked since the CMS update. Can you check the GTM tags and make sure GA4 is firing properly? Also the CDN might be caching old assets.",
+      "expectedTasks": 3,
+      "notes": "Technical jargon shouldn't confuse the parser."
+    },
+    {
+      "id": "edge_8",
+      "name": "Repeated Emphasis",
+      "input": "THIS IS URGENT. The payment gateway is DOWN. CUSTOMERS CANNOT PAY. Fix it NOW. This is the highest priority. Everything else can wait.",
+      "expectedTasks": 1,
+      "notes": "All the urgency markers, but it's still just one task."
+    },
+    {
+      "id": "edge_9",
+      "name": "Task Then Clarification",
+      "input": "Fix the navigation menu. Actually wait, not the main menu, the footer menu. The one that shows on mobile.",
+      "expectedTasks": 1,
+      "notes": "Self-correction should result in one task with clarified scope."
+    },
+    {
+      "id": "edge_10",
+      "name": "Numbered But Rambling",
+      "input": "1) The thing with the form 2) also the other thing from last week you know what I mean 3) and that stuff we talked about at lunch",
+      "expectedTasks": 3,
+      "notes": "Numbered but vague. Each needs clarifying questions."
+    },
+    {
+      "id": "edge_11",
+      "name": "Conditional Tasks",
+      "input": "If the new theme works, deploy it to production. If not, roll back to the old one and let me know what went wrong.",
+      "expectedTasks": 1,
+      "notes": "Conditional logic is one task with branches, not two tasks."
+    },
+    {
+      "id": "edge_12",
+      "name": "Forward With Commentary",
+      "input": "See below. Can you handle this? I have no idea what they're talking about. --- Original message: Hi, we noticed the SSL certificate is expiring soon.",
+      "expectedTasks": 1,
+      "notes": "Forwarded content with wrapper. The actual task is SSL renewal."
+    },
+    {
+      "id": "edge_13",
+      "name": "Emoji Heavy",
+      "input": "🚨 URGENT 🚨 The payment button is broken!!! 💸 Customers can't buy anything 😱 Please fix ASAP 🙏🙏🙏",
+      "expectedTasks": 1,
+      "notes": "Emojis shouldn't confuse parsing. It's one urgent task."
+    },
+    {
+      "id": "edge_14",
+      "name": "Voice Transcription Artifacts",
+      "input": "ok so um the the website is like not working properly I think um you know the the checkout thing yeah that one it's its not submitting or whatever",
+      "expectedTasks": 1,
+      "notes": "Filler words and repetition from voice transcription."
+    },
+    {
+      "id": "edge_15",
+      "name": "Multiple People Mentioned",
+      "input": "Tell Sarah to update the social media and ask Mike if he finished the logo. I need to follow up with the client by Thursday. Oh and remind Jeff about the meeting.",
+      "expectedTasks": 4,
+      "notes": "Multiple people = likely multiple tasks."
+    }
+  ]
+}

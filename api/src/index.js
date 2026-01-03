@@ -5,6 +5,9 @@ import 'dotenv/config';
 
 import { lobCatcher } from './routes/lob-catcher.js';
 import { health } from './routes/health.js';
+import { tasksRouter } from './routes/tasks.js';
+import { routingRouter } from './routes/routing.js';
+import { brainRouter } from './routes/brain.js';
 
 const app = new Hono();
 
@@ -14,6 +17,9 @@ app.use('/*', cors());
 // Routes
 app.route('/api/health', health);
 app.route('/api/lob', lobCatcher);
+app.route('/api/tasks', tasksRouter);
+app.route('/api/routing', routingRouter);
+app.route('/api/brain', brainRouter);
 
 // Start server
 const port = process.env.PORT || 3000;

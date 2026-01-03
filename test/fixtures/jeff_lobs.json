@@ -1,0 +1,112 @@
+{
+  "_documentation": "Real Jeff-style lob inputs for testing the parser. These are based on actual communication patterns.",
+
+  "lobs": [
+    {
+      "id": "jeff_1",
+      "name": "The Classic Multi-Task",
+      "input": "First thing we need to fix the notification problem. It has an error that needs to be fixed. 2nd we need to fix the birthday deliveries by monday because i forgot i have a TV spot with KUTV to promote them. I might need access to the google account too. WordPress sent a 3rd party authentication to the gmail account and its probably time sensitive.",
+      "expectedTasks": 4,
+      "expectedClassifications": {
+        "task": 2,
+        "reminder": 1,
+        "self_service": 1
+      },
+      "notes": "The canonical example. 4 things: bug, urgent bug with deadline, calendar reminder, self-service auth code."
+    },
+    {
+      "id": "jeff_2",
+      "name": "Stream of Consciousness",
+      "input": "ok so the website is doing that thing again where it just stops and I tried clicking the button but nothing happens and also we need to order more helium before friday oh and did you get my email about the corporate account I sent it yesterday or maybe the day before anyway the checkout page looks weird on my phone can you look at that when you get a chance",
+      "expectedTasks": 4,
+      "expectedClassifications": {
+        "task": 3,
+        "self_service": 1
+      },
+      "notes": "No punctuation, stream of consciousness, topics blur together."
+    },
+    {
+      "id": "jeff_3",
+      "name": "Venting With Hidden Task",
+      "input": "I'm so frustrated with this WordPress garbage it breaks every single week and I can never figure out what's wrong with it. The contact form stopped working again and customers are complaining.",
+      "expectedTasks": 2,
+      "expectedClassifications": {
+        "venting": 1,
+        "task": 1
+      },
+      "notes": "Starts as venting, but has a real task embedded (contact form broken)."
+    },
+    {
+      "id": "jeff_4",
+      "name": "All Self-Service",
+      "input": "I need to reset my password for the bank account and I can't find the login for Netflix and my phone is asking for some verification code from Google",
+      "expectedTasks": 3,
+      "expectedClassifications": {
+        "self_service": 3
+      },
+      "notes": "All three are things Jeff can do himself."
+    },
+    {
+      "id": "jeff_5",
+      "name": "Deadline Cascade",
+      "input": "We need the new pricing page up by Tuesday for the meeting with ACME Corp and then the email campaign has to go out Wednesday morning before the sale starts Thursday and don't forget the banner needs to change for the weekend promo",
+      "expectedTasks": 4,
+      "expectedClassifications": {
+        "task": 3,
+        "reminder": 1
+      },
+      "notes": "Multiple deadlines in sequence. Pricing page, email campaign, banner update, reminder about ACME meeting."
+    },
+    {
+      "id": "jeff_6",
+      "name": "The Rambling Explanation",
+      "input": "So you know how last week we talked about the birthday thing and you said you would look into it well I was thinking maybe we could add a section where people can add a custom message and also upload a photo but I don't know if that's hard to do or not and while you're at it can you make the colors match our new branding that Sarah sent over I think it was in Slack or maybe email",
+      "expectedTasks": 3,
+      "expectedClassifications": {
+        "task": 3
+      },
+      "notes": "Feature requests buried in rambling context."
+    },
+    {
+      "id": "jeff_7",
+      "name": "Quick Fire",
+      "input": "Check the analytics. Update the blog. Call back the supplier. Fix the typo on the about page.",
+      "expectedTasks": 4,
+      "expectedClassifications": {
+        "task": 4
+      },
+      "notes": "Rare clear format, but still a lob of multiple things."
+    },
+    {
+      "id": "jeff_8",
+      "name": "Pure Venting",
+      "input": "I just can't anymore with this week everything is falling apart and nobody is helping and I'm supposed to do a million things at once",
+      "expectedTasks": 1,
+      "expectedClassifications": {
+        "venting": 1
+      },
+      "notes": "No actionable tasks, just overwhelm. Should acknowledge, not create tasks."
+    },
+    {
+      "id": "jeff_9",
+      "name": "Technical With Context",
+      "input": "The WooCommerce checkout is broken on mobile again, same thing as last time with the button being too small. Also the Klaviyo integration stopped syncing customers and I think it happened after the last WordPress update. Oh and QuickBooks is showing duplicate invoices for some reason.",
+      "expectedTasks": 3,
+      "expectedClassifications": {
+        "task": 3
+      },
+      "notes": "Three system-specific issues. Good for testing system detection and resolution memory."
+    },
+    {
+      "id": "jeff_10",
+      "name": "Delegation Request",
+      "input": "Can you handle the website stuff this week? I need to focus on the balloon show. Just make sure nothing's broken and maybe update the holiday hours page. Oh and if anyone calls about the corporate event quote, tell them I'll call them back Monday.",
+      "expectedTasks": 3,
+      "expectedClassifications": {
+        "task": 2,
+        "reminder": 1
+      },
+      "notes": "Delegation with multiple sub-items."
+    }
+  ]
+}
