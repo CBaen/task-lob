@@ -58,9 +58,10 @@ class ApiService {
 ApiService createApiService() {
   // Default to localhost for development
   // This will be configured via environment/settings in production
+  // Port 3001 to avoid conflicts with other dev servers
   const baseUrl = String.fromEnvironment(
     'API_URL',
-    defaultValue: 'http://localhost:3000',
+    defaultValue: 'http://localhost:3001',
   );
 
   return ApiService(baseUrl: baseUrl);
