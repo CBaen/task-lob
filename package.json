@@ -1,0 +1,14 @@
+{
+  "name": "task-lob",
+  "version": "1.0.0",
+  "private": true,
+  "description": "The Lob Catcher - catch chaos, parse tasks, route intelligently",
+  "scripts": {
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.0.0",
+    "prettier": "^3.0.0"
+  }
+}
