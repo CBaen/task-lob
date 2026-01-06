@@ -2,7 +2,7 @@
   {
     "name": "workspaces",
     "type": "base",
-    "schema": [
+    "fields": [
       {
         "name": "name",
         "type": "text",
@@ -28,7 +28,7 @@
   {
     "name": "lob_sessions",
     "type": "base",
-    "schema": [
+    "fields": [
       {
         "name": "raw_input",
         "type": "text",
@@ -59,7 +59,7 @@
   {
     "name": "tasks",
     "type": "base",
-    "schema": [
+    "fields": [
       {
         "name": "raw_input",
         "type": "text",
@@ -204,7 +204,7 @@
   {
     "name": "threads",
     "type": "base",
-    "schema": [
+    "fields": [
       {
         "name": "task",
         "type": "relation",
@@ -251,7 +251,7 @@
   {
     "name": "company_brain",
     "type": "base",
-    "schema": [
+    "fields": [
       {
         "name": "workspace",
         "type": "relation",
@@ -267,7 +267,16 @@
         "type": "select",
         "required": true,
         "options": {
-          "values": ["system", "person", "product", "vocabulary", "routing", "resolution", "website", "timeline"]
+          "values": [
+            "system",
+            "person",
+            "product",
+            "vocabulary",
+            "routing",
+            "resolution",
+            "website",
+            "timeline"
+          ]
         }
       },
       {
@@ -319,7 +328,7 @@
   {
     "name": "resolutions",
     "type": "base",
-    "schema": [
+    "fields": [
       {
         "name": "workspace",
         "type": "relation",
@@ -380,7 +389,7 @@
   {
     "name": "website_cache",
     "type": "base",
-    "schema": [
+    "fields": [
       {
         "name": "workspace",
         "type": "relation",

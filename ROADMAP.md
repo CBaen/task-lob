@@ -148,7 +148,9 @@ These decisions are final. Don't revisit them - build on them.
 | ----------------------------- | --------------------------- | ------------------------------------------------------------------------------- |
 | ~~Flutter SDK not installed~~ | ~~Cannot build UI~~         | **RESOLVED** - Flutter 3.27.4 installed at `C:/Users/baenb/flutter-sdk/flutter` |
 | ~~Android SDK not installed~~ | ~~Cannot build mobile APK~~ | **RESOLVED** - Android SDK 34 + Java 17 at `C:/Users/baenb/Android/sdk`         |
-| PocketBase not running        | Cannot test full flow       | Start PocketBase, import schema                                                 |
+| ~~PocketBase not running~~    | ~~Cannot test full flow~~   | **RESOLVED** - PocketBase 0.25.9 running at http://127.0.0.1:8090               |
+| No AI API key                 | Parser cannot work          | Get Groq API key from https://console.groq.com/keys (free tier)                 |
+| Schema not imported           | Collections missing fields  | Import via Admin UI at http://127.0.0.1:8090/_/ (Settings > Import)             |
 
 ---
 
@@ -159,20 +161,21 @@ These decisions are final. Don't revisit them - build on them.
 git clone https://github.com/CBaen/task-lob.git
 cd task-lob
 
-# Start PocketBase
-cd pocketbase && ./pocketbase serve
-# Import schema.json via admin UI at http://127.0.0.1:8090/_/
+# Start PocketBase (already installed at pocketbase/pocketbase.exe)
+cd pocketbase && ./pocketbase.exe serve
+# Admin: admin@tasklob.local / admin123456
+# Import schema.json via Admin UI at http://127.0.0.1:8090/_/ (Settings > Import)
 
 # Start API (new terminal)
 cd api
-cp .env.example .env  # Add your AI provider API key
-npm install && npm run dev
+cp .env.example .env  # Add your Groq API key from https://console.groq.com/keys
+npm install && npm run dev  # Runs on port 3001
 
 # Test parsing
-curl http://localhost:3000/api/lob/test
+curl http://localhost:3001/api/lob/test
 
-# Flutter (once SDK installed)
-cd app && flutter pub get && flutter run
+# Flutter (SDK at C:/Users/baenb/flutter-sdk/flutter)
+cd app && flutter pub get && flutter run -d windows  # Or -d android
 ```
 
 ---

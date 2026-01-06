@@ -44,3 +44,6 @@ coverage/
 # OS
 Thumbs.db
 .DS_Store
+pocketbase/pocketbase.exe
+pocketbase/pb_data/
+api/.env
