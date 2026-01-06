@@ -77,18 +77,22 @@ These decisions are final. Don't revisit them - build on them.
 
 ### Phase 2: Flutter UI
 
-**Status: 10%**
+**Status: 60%**
 
 - [x] Flutter models (Task, ParsedLob)
 - [x] Service scaffolding (API client, voice service)
 - [x] **Flutter SDK installed** (3.27.4, Windows desktop ready)
 - [x] **Android SDK installed** (SDK 34, Java 17, APK builds working)
 - [x] Platform folders created (android, ios, windows)
-- [ ] HomeScreen - Entry point, quick capture, court overview
-- [ ] CatcherScreen - Voice/text input, live parsing preview
-- [ ] CourtScreen - Tasks waiting on ME
-- [ ] WaitingScreen - Tasks waiting on OTHERS
+- [x] App shell with bottom navigation
+- [x] Riverpod state management
+- [x] CatcherScreen - Voice/text input, live parsing preview, classification display
+- [x] CourtScreen - Tasks waiting on ME (urgency sorting, badges)
+- [x] WaitingScreen - Tasks waiting on OTHERS (grouped by person)
+- [x] ParsedLobCard widget (self-service steps, venting, missing info)
+- [x] TaskCard widget (status, urgency, deadline, detail modal)
 - [ ] BrainScreen - Company learning, routing patterns
+- [ ] Connect screens to real API data (currently using state providers)
 
 ### Phase 3: Voice Integration
 
