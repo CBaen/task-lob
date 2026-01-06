@@ -77,11 +77,13 @@ These decisions are final. Don't revisit them - build on them.
 
 ### Phase 2: Flutter UI
 
-**Status: 5%**
+**Status: 10%**
 
 - [x] Flutter models (Task, ParsedLob)
 - [x] Service scaffolding (API client, voice service)
 - [x] **Flutter SDK installed** (3.27.4, Windows desktop ready)
+- [x] **Android SDK installed** (SDK 34, Java 17, APK builds working)
+- [x] Platform folders created (android, ios, windows)
 - [ ] HomeScreen - Entry point, quick capture, court overview
 - [ ] CatcherScreen - Voice/text input, live parsing preview
 - [ ] CourtScreen - Tasks waiting on ME
@@ -142,11 +144,11 @@ These decisions are final. Don't revisit them - build on them.
 
 ## Current Blockers
 
-| Blocker                       | Impact                  | Resolution                                                                      |
-| ----------------------------- | ----------------------- | ------------------------------------------------------------------------------- |
-| ~~Flutter SDK not installed~~ | ~~Cannot build UI~~     | **RESOLVED** - Flutter 3.27.4 installed at `C:/Users/baenb/flutter-sdk/flutter` |
-| PocketBase not running        | Cannot test full flow   | Start PocketBase, import schema                                                 |
-| Android SDK not installed     | Cannot build mobile APK | Install Android Studio or standalone SDK when ready for mobile                  |
+| Blocker                       | Impact                      | Resolution                                                                      |
+| ----------------------------- | --------------------------- | ------------------------------------------------------------------------------- |
+| ~~Flutter SDK not installed~~ | ~~Cannot build UI~~         | **RESOLVED** - Flutter 3.27.4 installed at `C:/Users/baenb/flutter-sdk/flutter` |
+| ~~Android SDK not installed~~ | ~~Cannot build mobile APK~~ | **RESOLVED** - Android SDK 34 + Java 17 at `C:/Users/baenb/Android/sdk`         |
+| PocketBase not running        | Cannot test full flow       | Start PocketBase, import schema                                                 |
 
 ---
 
