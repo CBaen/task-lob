@@ -35,12 +35,12 @@ export const collections = {
   /**
    * List records from a collection
    */
-  async list(collection, { page = 1, perPage = 50, filter = '', sort = '-created' } = {}) {
+  async list(collection, { page = 1, perPage = 50, filter = '', sort = '' } = {}) {
     const params = new URLSearchParams({
       page: String(page),
       perPage: String(perPage),
-      sort,
     });
+    if (sort) params.set('sort', sort);
     if (filter) params.set('filter', filter);
 
     return pbRequest(`/collections/${collection}/records?${params}`);
@@ -203,11 +203,15 @@ export const threads = {
  */
 export const companyBrain = {
   async list(workspaceId, memoryType = null) {
-    let filter = `workspace = "${workspaceId}"`;
-    if (memoryType) {
-      filter += ` && memory_type = "${memoryType}"`;
+    // For MVP, default workspace matches all records
+    let filter = '';
+    if (workspaceId && workspaceId !== 'default') {
+      filter = `workspace = "${workspaceId}"`;
     }
-    return collections.list('company_brain', { filter, perPage: 200 });
+    if (memoryType) {
+      filter += filter ? ` && memory_type = "${memoryType}"` : `memory_type = "${memoryType}"`;
+    }
+    return collections.list('company_brain', { filter: filter || undefined, perPage: 200 });
   },
 
   async get(id) {

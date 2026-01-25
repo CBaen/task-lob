@@ -4,6 +4,10 @@
 
 Catches chaos (voice or text), parses it into discrete pieces, classifies each piece (task, self-service, reminder, venting), and routes them intelligently. Built for how neurodivergent people actually communicate.
 
+## Port Assignment
+
+**Port 3002** (API) - Reserved for this project. See `~/CLAUDE.md` for full port registry.
+
 ## Tech Stack
 
 | Layer       | Technology           | Notes                               |

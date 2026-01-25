@@ -69,6 +69,28 @@ class ParsedLobCard extends StatelessWidget {
                     ),
               ),
 
+              // Assignee if detected
+              if (task.hasAssignee) ...[
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.person,
+                      size: 14,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      task.displayAssignee,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context).colorScheme.primary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                    ),
+                  ],
+                ),
+              ],
+
               // System name if detected
               if (task.system != null) ...[
                 const SizedBox(height: 4),
@@ -134,27 +156,26 @@ class ParsedLobCard extends StatelessWidget {
                 ),
               ],
 
-              // Venting response
+              // Low priority / deprioritized note
               if (task.isVenting && task.ventingResponse != null) ...[
                 const SizedBox(height: 12),
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.purple.shade50,
+                    color: Colors.grey.shade100,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(Icons.favorite,
-                          size: 16, color: Colors.purple.shade400),
+                      Icon(Icons.info_outline,
+                          size: 16, color: Colors.grey.shade600),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           task.ventingResponse!,
                           style: TextStyle(
-                            fontStyle: FontStyle.italic,
-                            color: Colors.purple.shade700,
+                            color: Colors.grey.shade700,
                           ),
                         ),
                       ),
@@ -241,9 +262,9 @@ class ParsedLobCard extends StatelessWidget {
   Widget _buildClassificationBadge(BuildContext context) {
     final (color, icon, label) = switch (task.classification) {
       'task' => (Colors.blue, Icons.task_alt, 'Task'),
-      'self_service' => (Colors.green, Icons.self_improvement, 'Self-Service'),
-      'reminder' => (Colors.orange, Icons.alarm, 'Reminder'),
-      'venting' => (Colors.purple, Icons.favorite, 'Venting'),
+      'self_service' => (Colors.green, Icons.build_outlined, 'Self-Service'),
+      'reminder' => (Colors.orange, Icons.schedule, 'Reminder'),
+      'venting' => (Colors.grey, Icons.low_priority, 'Low Priority'),
       _ => (Colors.grey, Icons.help, 'Unknown'),
     };
 

@@ -45,5 +45,11 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<!-- Microphone permission for voice input -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Task Lob needs microphone access to catch your voice input and convert it to tasks.</string>
+	<!-- Speech recognition permission -->
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Task Lob uses speech recognition to transcribe your voice into text.</string>
 </dict>
 </plist>

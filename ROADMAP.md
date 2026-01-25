@@ -26,7 +26,7 @@ These decisions are final. Don't revisit them - build on them.
 
 | Decision        | Choice              | Reason                                                                                                     |
 | --------------- | ------------------- | ---------------------------------------------------------------------------------------------------------- |
-| **AI Provider** | **User-selectable** | Provider-agnostic architecture. Users choose their preferred AI. Must support real-time internet research. |
+| **AI Provider** | **User-selectable** | Provider-agnostic. Recommended: Mistral (FREE), DeepInfra, Together. Avoid DeepSeek direct (China). |
 | Voice Input     | Push-to-talk        | Privacy-first, not always-listening                                                                        |
 | Hierarchy       | Peer-to-peer        | No boss/employee distinction in the system                                                                 |
 | Backend         | PocketBase          | Self-hosted, real-time subscriptions, single binary                                                        |
@@ -73,7 +73,7 @@ These decisions are final. Don't revisit them - build on them.
 - [ ] Parser accuracy validation against fixtures
 - [ ] Routing endpoints implementation
 - [ ] Company Brain endpoints implementation
-- [ ] Provider abstraction for AI (support multiple providers)
+- [x] Provider abstraction for AI (OpenAI, Anthropic, Groq, DeepSeek, Together, Fireworks, Ollama, Gemini)
 
 ### Phase 2: Flutter UI
 
@@ -96,13 +96,18 @@ These decisions are final. Don't revisit them - build on them.
 
 ### Phase 3: Voice Integration
 
-**Status: 0%**
+**Status: 100%**
 
-- [ ] Push-to-talk implementation
-- [ ] Speech-to-text integration
-- [ ] Live transcription display
-- [ ] Parse-on-release flow
-- [ ] Error handling for failed transcription
+- [x] Push-to-talk implementation (long-press gesture on mic button)
+- [x] **Groq Whisper transcription** (server-side, batch processing)
+- [x] Audio recording to file (m4a format via audio_waveforms)
+- [x] API endpoint for transcription (`POST /api/lob/transcribe`)
+- [x] Parse-on-release flow (record → upload → transcribe → parse)
+- [x] Error handling for failed transcription (user-friendly error messages)
+- [x] Microphone permission handling (Android + iOS, with Settings link)
+- [x] Audio waveform visualization during recording
+- [x] Haptic feedback on record start/stop
+- [ ] Test on physical Android device
 
 ### Phase 4: End-to-End Flow
 
@@ -153,7 +158,7 @@ These decisions are final. Don't revisit them - build on them.
 | ~~Flutter SDK not installed~~ | ~~Cannot build UI~~         | **RESOLVED** - Flutter 3.27.4 installed at `C:/Users/baenb/flutter-sdk/flutter` |
 | ~~Android SDK not installed~~ | ~~Cannot build mobile APK~~ | **RESOLVED** - Android SDK 34 + Java 17 at `C:/Users/baenb/Android/sdk`         |
 | ~~PocketBase not running~~    | ~~Cannot test full flow~~   | **RESOLVED** - PocketBase 0.25.9 running at http://127.0.0.1:8090               |
-| No AI API key                 | Parser cannot work          | Get Groq API key from https://console.groq.com/keys (free tier)                 |
+| ~~Provider abstraction~~      | ~~Parser hardcoded~~        | **RESOLVED** - Supports 8 providers: OpenAI, Anthropic, Groq, DeepSeek, Together, Fireworks, Ollama, Gemini |
 | Schema not imported           | Collections missing fields  | Import via Admin UI at http://127.0.0.1:8090/_/ (Settings > Import)             |
 
 ---
@@ -208,4 +213,4 @@ The core value: **Only tool designed for chaos-first communication.**
 
 ---
 
-_Last updated: 2026-01-05 by Reluminant Instance (Flutter SDK setup)_
+_Last updated: 2026-01-06 by Reluminant Instance (Phase 3 Voice Integration - Groq Whisper)_

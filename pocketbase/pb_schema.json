@@ -1,0 +1,198 @@
+[
+  {
+    "id": "workspaces",
+    "name": "workspaces",
+    "type": "base",
+    "system": false,
+    "schema": [
+      {
+        "id": "name_field",
+        "name": "name",
+        "type": "text",
+        "required": true
+      },
+      {
+        "id": "website_url_field",
+        "name": "website_url",
+        "type": "url",
+        "required": false
+      }
+    ],
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "",
+    "updateRule": "",
+    "deleteRule": ""
+  },
+  {
+    "id": "company_brain",
+    "name": "company_brain",
+    "type": "base",
+    "system": false,
+    "schema": [
+      {
+        "id": "workspace_field",
+        "name": "workspace",
+        "type": "relation",
+        "required": false,
+        "options": {
+          "collectionId": "workspaces",
+          "cascadeDelete": false,
+          "maxSelect": 1,
+          "displayFields": ["name"]
+        }
+      },
+      {
+        "id": "memory_type_field",
+        "name": "memory_type",
+        "type": "select",
+        "required": true,
+        "options": {
+          "maxSelect": 1,
+          "values": ["system", "person", "company", "product", "vocabulary", "routing", "resolution", "website", "timeline"]
+        }
+      },
+      {
+        "id": "key_field",
+        "name": "key",
+        "type": "text",
+        "required": true
+      },
+      {
+        "id": "value_field",
+        "name": "value",
+        "type": "json",
+        "required": false
+      },
+      {
+        "id": "confidence_field",
+        "name": "confidence",
+        "type": "number",
+        "required": false,
+        "options": {
+          "min": 0,
+          "max": 1
+        }
+      },
+      {
+        "id": "times_confirmed_field",
+        "name": "times_confirmed",
+        "type": "number",
+        "required": false
+      },
+      {
+        "id": "times_used_field",
+        "name": "times_used",
+        "type": "number",
+        "required": false
+      },
+      {
+        "id": "last_used_field",
+        "name": "last_used",
+        "type": "date",
+        "required": false
+      }
+    ],
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "",
+    "updateRule": "",
+    "deleteRule": ""
+  },
+  {
+    "id": "resolutions",
+    "name": "resolutions",
+    "type": "base",
+    "system": false,
+    "schema": [
+      {
+        "id": "workspace_res_field",
+        "name": "workspace",
+        "type": "relation",
+        "required": false,
+        "options": {
+          "collectionId": "workspaces",
+          "cascadeDelete": false,
+          "maxSelect": 1
+        }
+      },
+      {
+        "id": "problem_pattern_field",
+        "name": "problem_pattern",
+        "type": "text",
+        "required": true
+      },
+      {
+        "id": "solution_field",
+        "name": "solution",
+        "type": "text",
+        "required": true
+      },
+      {
+        "id": "system_name_field",
+        "name": "system_name",
+        "type": "text",
+        "required": false
+      },
+      {
+        "id": "times_suggested_field",
+        "name": "times_suggested",
+        "type": "number",
+        "required": false
+      },
+      {
+        "id": "times_worked_field",
+        "name": "times_worked",
+        "type": "number",
+        "required": false
+      }
+    ],
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "",
+    "updateRule": "",
+    "deleteRule": ""
+  },
+  {
+    "id": "lob_sessions",
+    "name": "lob_sessions",
+    "type": "base",
+    "system": false,
+    "schema": [
+      {
+        "id": "raw_input_field",
+        "name": "raw_input",
+        "type": "text",
+        "required": true
+      },
+      {
+        "id": "workspace_lob_field",
+        "name": "workspace",
+        "type": "relation",
+        "required": false,
+        "options": {
+          "collectionId": "workspaces",
+          "cascadeDelete": false,
+          "maxSelect": 1
+        }
+      },
+      {
+        "id": "sender_field",
+        "name": "sender",
+        "type": "text",
+        "required": false
+      },
+      {
+        "id": "parsed_data_field",
+        "name": "parsed_data",
+        "type": "json",
+        "required": false
+      }
+    ],
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "",
+    "updateRule": "",
+    "deleteRule": ""
+  }
+]

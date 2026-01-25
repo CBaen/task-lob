@@ -6,11 +6,11 @@ import '../models/task.dart';
 
 /// API Service provider
 final apiServiceProvider = Provider<ApiService>((ref) {
-  // Use 10.0.2.2 for Android emulator to reach host localhost
-  // Use localhost for desktop/web
+  // Web/desktop: localhost, Android emulator: 10.0.2.2
+  // For now, use localhost - Android builds will need --dart-define=API_URL=http://10.0.2.2:3001
   const baseUrl = String.fromEnvironment(
     'API_URL',
-    defaultValue: 'http://10.0.2.2:3001', // Android emulator default
+    defaultValue: 'http://localhost:3001',
   );
   return ApiService(baseUrl: baseUrl);
 });
@@ -25,8 +25,11 @@ final currentUserIdProvider = StateProvider<String>((ref) {
   return 'user_placeholder';
 });
 
-/// Voice recording state
-final isRecordingProvider = StateProvider<bool>((ref) => false);
+/// Voice state (idle, initializing, listening, processing, error)
+final voiceStateProvider = StateProvider<VoiceState>((ref) => VoiceState.idle);
+
+/// Voice error message (if any)
+final voiceErrorProvider = StateProvider<String?>((ref) => null);
 
 /// Current transcript while recording
 final transcriptProvider = StateProvider<String>((ref) => '');
@@ -46,7 +49,7 @@ final waitingTasksProvider = StateProvider<List<Task>>((ref) => []);
 /// All tasks
 final allTasksProvider = StateProvider<List<Task>>((ref) => []);
 
-/// Error message state
+/// Error message state (general app errors)
 final errorMessageProvider = StateProvider<String?>((ref) => null);
 
 /// API connection status

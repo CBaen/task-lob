@@ -1,109 +1,216 @@
-import 'package:speech_to_text/speech_to_text.dart';
-import 'package:speech_to_text/speech_recognition_result.dart';
+import 'dart:io';
+import 'package:audio_waveforms/audio_waveforms.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:path_provider/path_provider.dart';
+
+/// Voice input states for UI feedback
+enum VoiceState {
+  idle,           // Not recording
+  initializing,   // Setting up
+  listening,      // Actively recording audio
+  processing,     // Uploading to API for transcription
+  error,          // Something went wrong
+}
 
 /// Service for handling voice input (push-to-talk)
+///
+/// Records audio to a file for server-side transcription via Groq Whisper.
+/// This is the "lob" approach - record locally, transcribe remotely.
 class VoiceService {
-  final SpeechToText _speech = SpeechToText();
+  RecorderController? _recorder;
+  VoiceState _state = VoiceState.idle;
+  String _errorMessage = '';
+  String? _currentRecordingPath;
   bool _isInitialized = false;
-  bool _isListening = false;
 
-  /// Current transcript being built
-  String _currentTranscript = '';
-
-  /// Callback for when transcription updates
-  Function(String)? onTranscriptUpdate;
-
-  /// Callback for when listening state changes
-  Function(bool)? onListeningChanged;
+  /// Callback for when voice state changes
+  Function(VoiceState)? onStateChanged;
 
   /// Callback for when an error occurs
   Function(String)? onError;
 
-  /// Initialize the speech recognition
-  Future<bool> initialize() async {
-    if (_isInitialized) return true;
+  /// Current voice state
+  VoiceState get state => _state;
 
-    _isInitialized = await _speech.initialize(
-      onError: (error) {
-        onError?.call(error.errorMsg);
-      },
-      onStatus: (status) {
-        final isListening = status == 'listening';
-        if (_isListening != isListening) {
-          _isListening = isListening;
-          onListeningChanged?.call(isListening);
-        }
-      },
-    );
+  /// Current error message (if any)
+  String get errorMessage => _errorMessage;
 
-    return _isInitialized;
-  }
-
-  /// Check if speech recognition is available
+  /// Check if recording is available
   bool get isAvailable => _isInitialized;
 
   /// Check if currently listening
-  bool get isListening => _isListening;
+  bool get isListening => _state == VoiceState.listening;
 
-  /// Get the current transcript
-  String get transcript => _currentTranscript;
+  /// Get the recorder controller for waveform visualization
+  RecorderController? get recorderController => _recorder;
 
-  /// Start listening (push-to-talk start)
-  Future<void> startListening() async {
-    if (!_isInitialized) {
-      final initialized = await initialize();
-      if (!initialized) {
-        onError?.call('Speech recognition not available');
-        return;
-      }
+  /// Update state and notify listeners
+  void _setState(VoiceState newState) {
+    _state = newState;
+    onStateChanged?.call(newState);
+  }
+
+  /// Check and request microphone permission
+  Future<bool> _checkPermission() async {
+    var status = await Permission.microphone.status;
+
+    if (status.isDenied) {
+      status = await Permission.microphone.request();
     }
 
-    _currentTranscript = '';
+    if (status.isPermanentlyDenied) {
+      _errorMessage = 'Microphone permission permanently denied. Please enable in Settings.';
+      _setState(VoiceState.error);
+      onError?.call(_errorMessage);
+      return false;
+    }
 
-    await _speech.listen(
-      onResult: _onResult,
-      listenFor: const Duration(minutes: 2), // Max 2 minutes
-      pauseFor: const Duration(seconds: 3), // Pause detection
-      partialResults: true,
-      cancelOnError: false,
-      listenMode: ListenMode.dictation,
-    );
+    if (!status.isGranted) {
+      _errorMessage = 'Microphone permission required for voice input.';
+      _setState(VoiceState.error);
+      onError?.call(_errorMessage);
+      return false;
+    }
 
-    _isListening = true;
-    onListeningChanged?.call(true);
+    return true;
   }
 
-  /// Stop listening (push-to-talk release)
-  Future<String> stopListening() async {
-    await _speech.stop();
-    _isListening = false;
-    onListeningChanged?.call(false);
+  /// Initialize the recorder
+  Future<bool> initialize() async {
+    if (_isInitialized) return true;
 
-    return _currentTranscript;
+    _setState(VoiceState.initializing);
+
+    // Check permissions first
+    final hasPermission = await _checkPermission();
+    if (!hasPermission) return false;
+
+    try {
+      _recorder = RecorderController()
+        ..androidEncoder = AndroidEncoder.aac
+        ..androidOutputFormat = AndroidOutputFormat.mpeg4
+        ..iosEncoder = IosEncoder.kAudioFormatMPEG4AAC
+        ..sampleRate = 44100
+        ..bitRate = 128000;
+
+      _isInitialized = true;
+      _setState(VoiceState.idle);
+      return true;
+    } catch (e) {
+      _errorMessage = 'Failed to initialize recorder: $e';
+      _setState(VoiceState.error);
+      onError?.call(_errorMessage);
+      return false;
+    }
   }
 
-  /// Cancel listening without returning result
+  /// Get a temporary file path for recording
+  Future<String> _getRecordingPath() async {
+    final directory = await getTemporaryDirectory();
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    return '${directory.path}/lob_$timestamp.m4a';
+  }
+
+  /// Start recording (push-to-talk start)
+  Future<bool> startListening() async {
+    // Clear previous error
+    _errorMessage = '';
+
+    if (!_isInitialized) {
+      final initialized = await initialize();
+      if (!initialized) return false;
+    }
+
+    // Double-check permissions each time
+    final hasPermission = await _checkPermission();
+    if (!hasPermission) return false;
+
+    try {
+      _currentRecordingPath = await _getRecordingPath();
+
+      await _recorder?.record(path: _currentRecordingPath!);
+      _setState(VoiceState.listening);
+      return true;
+    } catch (e) {
+      _errorMessage = 'Failed to start recording: $e';
+      _setState(VoiceState.error);
+      onError?.call(_errorMessage);
+      return false;
+    }
+  }
+
+  /// Stop recording and return the audio file
+  ///
+  /// Returns the File containing the recording, or null if failed.
+  /// The caller should upload this to the API for transcription.
+  Future<File?> stopListening() async {
+    _setState(VoiceState.processing);
+
+    try {
+      final path = await _recorder?.stop();
+
+      if (path == null || path.isEmpty) {
+        _errorMessage = 'No recording captured.';
+        _setState(VoiceState.error);
+        onError?.call(_errorMessage);
+        return null;
+      }
+
+      final file = File(path);
+      if (!await file.exists()) {
+        _errorMessage = 'Recording file not found.';
+        _setState(VoiceState.error);
+        onError?.call(_errorMessage);
+        return null;
+      }
+
+      // Check file has content
+      final size = await file.length();
+      if (size < 1000) { // Less than 1KB probably means empty
+        _errorMessage = 'Recording too short. Hold the button while speaking.';
+        _setState(VoiceState.error);
+        onError?.call(_errorMessage);
+        return null;
+      }
+
+      _setState(VoiceState.idle);
+      return file;
+    } catch (e) {
+      _errorMessage = 'Failed to stop recording: $e';
+      _setState(VoiceState.error);
+      onError?.call(_errorMessage);
+      return null;
+    }
+  }
+
+  /// Cancel recording without returning result
   Future<void> cancelListening() async {
-    await _speech.cancel();
-    _isListening = false;
-    _currentTranscript = '';
-    onListeningChanged?.call(false);
+    try {
+      await _recorder?.stop();
+
+      // Delete the cancelled recording
+      if (_currentRecordingPath != null) {
+        final file = File(_currentRecordingPath!);
+        if (await file.exists()) {
+          await file.delete();
+        }
+      }
+    } catch (e) {
+      // Ignore cancel errors
+    }
+    _currentRecordingPath = null;
+    _setState(VoiceState.idle);
   }
 
-  /// Handle speech recognition results
-  void _onResult(SpeechRecognitionResult result) {
-    _currentTranscript = result.recognizedWords;
-    onTranscriptUpdate?.call(_currentTranscript);
-  }
-
-  /// Get available locales
-  Future<List<LocaleName>> getLocales() async {
-    if (!_isInitialized) await initialize();
-    return _speech.locales();
+  /// Open app settings (for permission management)
+  Future<void> openSettings() async {
+    await openAppSettings();
   }
 
   /// Dispose resources
   void dispose() {
-    _speech.stop();
+    _recorder?.dispose();
+    _recorder = null;
+    _isInitialized = false;
   }
 }
