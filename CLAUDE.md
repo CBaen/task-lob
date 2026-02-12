@@ -128,8 +128,6 @@ python ~/.claude/scripts/decision-search.py search task-lob-decisions.md "keywor
 python ~/.claude/scripts/decision-search.py recent task-lob-decisions.md --count 5
 ```
 
-**Global rules apply.** See `~/.claude/CLAUDE.md` for infrastructure-wide expectations.
-
 ---
 
 ## Key Decisions (Already Made)
