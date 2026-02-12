@@ -89,6 +89,49 @@ cd app && flutter run
 - `docs/SETUP.md` - Full setup instructions
 - `MODULES.json` - Machine-readable module status
 
+## Document Parity Rule
+
+**Every change that affects route counts, screen counts, collection counts, or architectural state MUST update ALL documents that reference those numbers.**
+
+After any structural change, grep for stale references:
+
+```bash
+grep -rn "OLD_COUNT" --include="*.md" --include="*.js" --include="*.dart"
+```
+
+**Documents that carry counts (must stay in sync):**
+
+| File                                      | What It Tracks                             |
+| ----------------------------------------- | ------------------------------------------ |
+| `CLAUDE.md`                               | Project structure, tech stack, key numbers |
+| `RELUMINANT.md`                           | Developer handoff stats                    |
+| `README.md`                               | Project overview                           |
+| `MODULES.json`                            | Module status                              |
+| (add project-specific files as they grow) |
+
+**The rule:** If you change a tracked number — update every file in this table. Use grep to verify zero stale references before marking a task complete.
+
+---
+
+## Decisions
+
+**Append-only files:** Decision logs are append-only. Never read the full file.
+
+```bash
+# Add a decision
+python ~/.claude/scripts/decision-search.py append task-lob-decisions.md "Decision" "Reasoning" "Reference"
+
+# Search decisions by keyword
+python ~/.claude/scripts/decision-search.py search task-lob-decisions.md "keyword"
+
+# Show recent decisions
+python ~/.claude/scripts/decision-search.py recent task-lob-decisions.md --count 5
+```
+
+**Global rules apply.** See `~/.claude/CLAUDE.md` for infrastructure-wide expectations.
+
+---
+
 ## Key Decisions (Already Made)
 
 | Decision   | Choice             | Reason                              |
